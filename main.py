@@ -26,6 +26,7 @@ class Browser(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Carbon")
+        self.setWindowIcon(QIcon(TablerIcons.load(OutlineIcon.ATOM, color="#ffffff").toqpixmap()))
         self.resize(1200, 800)
 
         self.tabs = QTabWidget()
@@ -85,7 +86,6 @@ class Browser(QMainWindow):
             self.tabs.setCurrentIndex(index)
 
         browser.urlChanged.connect(lambda url, browser=browser: self.update_url(url, browser))
-        browser.loadFinished.connect(lambda _, browser=browser: self.update_title(browser))
         browser.titleChanged.connect(lambda title, browser=browser: self.update_tab_title(browser, title))
         return browser
 
@@ -98,7 +98,7 @@ class Browser(QMainWindow):
         browser = self.tabs.widget(index)
         if browser:
             self.url_bar.setText(browser.url().toString())
-            self.update_title(browser)
+
 
     def go_home(self):
         self.current_browser().setUrl(QUrl("https://www.google.com"))
@@ -116,18 +116,13 @@ class Browser(QMainWindow):
             self.url_bar.setText(qurl.toString())
             self.url_bar.setCursorPosition(0)
 
-    def update_title(self, browser=None):
-        if browser is None:
-            browser = self.current_browser()
-        title = browser.page().title() or "Carbon"
-        self.setWindowTitle(f"{title} - Carbon")
+
 
     def update_tab_title(self, browser, title):
         index = self.tabs.indexOf(browser)
         if index != -1:
             self.tabs.setTabText(index, title[:18] if title else "New Tab")
-        if browser == self.current_browser():
-            self.update_title(browser)
+
 
 
 if __name__ == "__main__":
