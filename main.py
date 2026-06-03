@@ -6,6 +6,8 @@ from PyQt6.QtWebEngineCore import QWebEnginePage
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from pytablericons import TablerIcons, OutlineIcon
 
+from source.toolbar import newTab, backButton, fowardButton, reloadButton, homeButton
+
 
 class WebView(QWebEngineView):
     def __init__(self, main_window):
@@ -39,30 +41,15 @@ class Browser(QMainWindow):
         toolbar = QToolBar("Navigation")
         self.addToolBar(toolbar)
 
-        new_tab_action = QAction("New Tab", self)
-        new_tab_action.setIcon(QIcon(TablerIcons.load(OutlineIcon.PLUS, color="#ffffff").toqpixmap()))
-        new_tab_action.triggered.connect(lambda: self.add_new_tab())
-        toolbar.addAction(new_tab_action)
+        toolbar.addAction(newTab(self))
 
-        back_action = QAction("Back", self)
-        back_action.setIcon(QIcon(TablerIcons.load(OutlineIcon.ARROW_NARROW_LEFT, color="#ffffff").toqpixmap()))
-        back_action.triggered.connect(lambda: self.current_browser().back())
-        toolbar.addAction(back_action)
+        toolbar.addAction(backButton(self))
 
-        forward_action = QAction("Forward", self)
-        forward_action.setIcon(QIcon(TablerIcons.load(OutlineIcon.ARROW_NARROW_RIGHT, color="#ffffff").toqpixmap()))
-        forward_action.triggered.connect(lambda: self.current_browser().forward())
-        toolbar.addAction(forward_action)
+        toolbar.addAction(fowardButton(self))
 
-        reload_action = QAction("Reload", self)
-        reload_action.setIcon(QIcon(TablerIcons.load(OutlineIcon.RELOAD, color="#ffffff").toqpixmap()))
-        reload_action.triggered.connect(lambda: self.current_browser().reload())
-        toolbar.addAction(reload_action)
+        toolbar.addAction(reloadButton(self))
 
-        home_action = QAction("Home", self)
-        home_action.setIcon(QIcon(TablerIcons.load(OutlineIcon.HOME, color="#ffffff").toqpixmap()))
-        home_action.triggered.connect(self.go_home)
-        toolbar.addAction(home_action)
+        toolbar.addAction(homeButton(self))
 
         self.url_bar = QLineEdit()
         self.url_bar.returnPressed.connect(self.navigate_to_url)
